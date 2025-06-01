@@ -1,1 +1,1 @@
-# Cahn-Hilliard_Phase_Separation
+# Cahn-Hilliard Phase Separation
