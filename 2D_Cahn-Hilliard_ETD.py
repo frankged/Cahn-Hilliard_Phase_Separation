@@ -2,6 +2,26 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.fft import fft2, ifft2, fftfreq
 
+
+#calculate characteristic length scale
+def characteristic_length_scale(phi):
+    """Calculate the characteristic length scale of the phase field."""
+    # Compute the Fourier transform of phi
+    phi_hat = fft2(phi)
+    
+    # Compute the structure factor
+    structure_factor = np.abs(phi_hat)**2
+    
+    # Calculate the wavenumber
+    kx = 2 * np.pi * fftfreq(N, d=dx)
+    ky = 2 * np.pi * fftfreq(N, d=dy)
+    KX, KY = np.meshgrid(kx, ky, indexing='ij')
+    
+    # Calculate the characteristic length scale
+    length_scale = np.sum(structure_factor) / np.sum(structure_factor * (KX**2 + KY**2))
+    
+    return length_scale
+
 # Grid parameters
 N = 128      # Grid size N x N (try 128, 256, 512)
 L = 50.0     # Domain size
@@ -75,9 +95,7 @@ for step in range(n_steps):
         plt.clf()
         plt.imshow(phi, extent=(0, L, 0, L), cmap='RdBu', origin='lower')
         plt.colorbar()
-        plt.title(f"Step {step}")
+        plt.title(f"Step {step}, Characteristic Length Scale: {characteristic_length_scale(phi):.2f}")
         plt.pause(0.01)
 
 plt.show()
-
-#calculate characteristic length scale
