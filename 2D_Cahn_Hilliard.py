@@ -19,6 +19,7 @@ k = 2 * np.pi * fftfreq(N, d=h)
 KX, KY = np.meshgrid(k, k, indexing='ij')
 k2 = KX**2 + KY**2
 
+# Use ETD: i.e. 
 
 # Define the time span and initial condition
 t_span = (0, 10)  # Start and end time
