@@ -2,6 +2,7 @@ import numpy as np
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 
+np.random.seed(42)  # For reproducibility
 N = 100 # Number of grid points
 BOUNDARY = 'periodic' # Boundary condition type
 h = 1.0 / N # Step size
