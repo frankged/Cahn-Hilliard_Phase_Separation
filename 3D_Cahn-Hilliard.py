@@ -25,7 +25,7 @@ X, Y, Z = np.meshgrid(x, y, z, indexing='ij')
 
 # Time parameters
 dt = 0.01
-n_steps = 100
+n_steps = 1000
 save_every = 10  # Save every 10 steps
 
 # Physical parameter
@@ -125,6 +125,6 @@ def update(frame):
 # Animate
 ani = animation.FuncAnimation(fig, update, frames=len(phi_snapshots), interval=200, blit=False)
 
-# plt.show()
+plt.show()
 ani.save("cahn_hilliard_3d.mp4", fps=5)
 
