@@ -25,8 +25,8 @@ def characteristic_length_scale(phi):
     return length_scale
 
 # Grid parameters
-N = 128    # Grid size N x N (try 128, 256, 512)
-L = 50.0     # Domain size
+N = 512    # Grid size N x N 
+L = 200.0     # Domain size
 dx = L / N
 dy = L / N
 x = np.linspace(0, L, N, endpoint=False)
@@ -100,7 +100,7 @@ for step in tqdm(range(n_steps)):
 
 # --- Animation ---
 fig, ax = plt.subplots()
-im = ax.imshow(phi_snapshots[0], extent=(0, L, 0, L), cmap='RdBu', origin='lower')
+im = ax.imshow(phi_snapshots[0], extent=(0, L, 0, L), cmap='RdBu', vmin=-1, vmax=1, origin='lower')
 cbar = plt.colorbar(im, ax=ax)
 title = ax.set_title("")
 
@@ -111,11 +111,7 @@ def update(frame):
 
 ani = animation.FuncAnimation(fig, update, frames=len(phi_snapshots), interval=100, blit=False)
 
-# To display in a notebook, use:
-# from IPython.display import HTML
-# HTML(ani.to_jshtml())
-
-# To save as MP4:
-ani.save("cahn_hilliard_2d.mp4", fps=10)
+#save as MP4:
+ani.save("cahn_hilliard_2d_1.mp4", fps=10)
 
 plt.show()
