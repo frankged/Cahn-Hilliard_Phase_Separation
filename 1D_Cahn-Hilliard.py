@@ -30,7 +30,7 @@ t_span = (0, 100)  # Start and end time
 phi_0 = phi_0.flatten()  # Flatten to 1D array for solve_ivp
 t_eval = np.linspace(t_span[0], t_span[1], 100)  # Time points to evaluate      
 # Solve the Cahn-Hilliard equation using solve_ivp
-solution = solve_ivp(f, t_span, phi_0, t_eval=t_eval)
+solution = solve_ivp(f, t_span, phi_0, t_eval=t_eval,method='BDF')
 print("Solution shape:", solution.y.shape)
 # Plot the results
 plt.figure(figsize=(10, 6))
