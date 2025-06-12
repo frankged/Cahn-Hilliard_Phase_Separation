@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import animation
 from scipy.fft import fft2, ifft2, fftfreq
+from tqdm import tqdm
 
 
 #calculate characteristic length scale
@@ -23,7 +25,7 @@ def characteristic_length_scale(phi):
     return length_scale
 
 # Grid parameters
-N = 128      # Grid size N x N (try 128, 256, 512)
+N = 128    # Grid size N x N (try 128, 256, 512)
 L = 50.0     # Domain size
 dx = L / N
 dy = L / N
@@ -33,8 +35,8 @@ X, Y = np.meshgrid(x, y, indexing='ij')
 
 # Time parameters
 dt = 0.01
-n_steps = 10000
-save_every = 100
+n_steps = 20000
+save_every = 10
 
 # Physical parameter
 epsilon = 1.0
@@ -62,7 +64,9 @@ phi_func = (E - 1) * inv_L_hat
 phi_func2 = (E2 - 1) * inv_L_hat
 
 # Time loop
-for step in range(n_steps):
+phi_snapshots = []
+
+for step in tqdm(range(n_steps)):
 
     # First half-step: compute nonlinear term
     phi_hat = fft2(phi)
@@ -90,12 +94,28 @@ for step in range(n_steps):
     phi_hat_new = E * phi_hat + phi_func * nonlinear1 + E2 * phi_func2 * nonlinear2
     phi = ifft2(phi_hat_new).real
 
-    # Optional: save or plot every few steps
+    # Save snapshots for animation
     if step % save_every == 0:
-        plt.clf()
-        plt.imshow(phi, extent=(0, L, 0, L), cmap='RdBu', origin='lower')
-        plt.colorbar()
-        plt.title(f"Step {step}, Characteristic Length Scale: {characteristic_length_scale(phi):.2f}")
-        plt.pause(0.01)
+        phi_snapshots.append(phi.copy())
+
+# --- Animation ---
+fig, ax = plt.subplots()
+im = ax.imshow(phi_snapshots[0], extent=(0, L, 0, L), cmap='RdBu', origin='lower')
+cbar = plt.colorbar(im, ax=ax)
+title = ax.set_title("")
+
+def update(frame):
+    im.set_data(phi_snapshots[frame])
+    title.set_text(f"Step {frame * save_every}, Characteristic Length Scale: {characteristic_length_scale(phi_snapshots[frame]):.2f}")
+    return [im, title]
+
+ani = animation.FuncAnimation(fig, update, frames=len(phi_snapshots), interval=100, blit=False)
+
+# To display in a notebook, use:
+# from IPython.display import HTML
+# HTML(ani.to_jshtml())
+
+# To save as MP4:
+ani.save("cahn_hilliard_2d.mp4", fps=10)
 
 plt.show()
